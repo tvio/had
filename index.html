@@ -8,18 +8,19 @@
     <style>
       body {
         background: #ffbf00;
+        text-align: center;
       }
       canvas {
         border: 10px solid red;
+       
       }
       h1 {
-        font-family: 'Avenir Next', Verdana;
+        font-family: Arial, Helvetica, sans-serif;
         font-weight: bold;
         text-align: center;
         margin-top: 0;
-        font-size: 4em;
-        letter-spacing: -10px;
-      }
+        font-size: 2em;
+        letter-spacing: 2px;      }
     </style>
   </head>
   <body>
@@ -70,7 +71,7 @@
       }
       gameLoop()
 
-      function move() {
+        function move() {
         //posunuj se auto
         snakePosX += snakeSpeed * velocityX
         snakePosY += snakeSpeed * velocityY
@@ -88,13 +89,14 @@
           snakePosY = canvas.height
         }
         //kolize a konec
-        tail.forEach((snakePart) => {
+         tail.forEach((snakePart) => {
           if (snakePosX == snakePart.x && snakePosY == snakePart.y) {
-            title.style.color = 'red'
-            title.innerHTML = `<strong>${score}</strong>`
-            gameIsRunning = false
-            alert('Snědl jsis ocas!')
+           title.style.color = 'black'
+           title.innerHTML = `<strong>Dosáhl jsi skóre ${score} . Zmáčnkni 'Enter' a udělej lepší výsledkek v další hře.</strong>`
+           gameIsRunning = false
+            //setTimeout(function(){alert('Snědl jsis ocas! Pro pokračování zmáčkni klávesu mimo šipek')},200);
           }
+        
         })
 
         //tail
@@ -104,11 +106,12 @@
         //food collision
         if (snakePosX === foodPosX && snakePosY === foodPosY) {
           snakeLength++
-          foodPosX = Math.floor(Math.random() * titleCountX) * snakeSize
-          foodPosY = Math.floor(Math.random() * titleCountY) * snakeSize
-          title.textContent = ++score
+          generujOvoce()
+          title.textContent = ++score         
         }
-      }
+          
+        }
+      
       function draw() {
         //canvas
         ctx.fillStyle = '#ffbf00'
@@ -135,7 +138,9 @@
         ctx.fillStyle = 'black'
         ctx.fillRect(snakePosX, snakePosY, snakeSize, snakeSize)
 
-        //food
+        //food + nedavej ovoce do ocasu
+      
+      
         ctx.fillStyle = 'green'
         ctx.fillRect(foodPosX, foodPosY, snakeSize, snakeSize)
       }
@@ -176,6 +181,21 @@
             if (!gameIsRunning) location.reload()
             break
         }
+      }
+      function generujOvoce(){
+        foodPosX = Math.floor(Math.random() * titleCountX) * snakeSize
+          foodPosY = Math.floor(Math.random() * titleCountY) * snakeSize
+
+          //nedavej do hlavy
+          if (foodPosX === snakePosX && foodPosY === snakePosY){
+             generujOvoce()
+           }
+          if (tail.some(
+            (snakePart) => snakePart.x === foodPosX && snakePart.y === foodPosY
+          )
+          ){
+            generujOvoce();
+          }
       }
     </script>
   </body>
